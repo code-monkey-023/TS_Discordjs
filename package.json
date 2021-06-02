@@ -1,0 +1,21 @@
+{
+  "name": "ts_discordjs",
+  "version": "1.0.0",
+  "description": "Typescript with discord.js",
+  "main": "main.js",
+  "dependencies": {
+    "nodemon": "^2.0.7",
+    "typescript": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.2",
+    "@types/ws": "^7.4.4",
+    "discord.js": "^12.5.3"
+  },
+  "scripts": {
+    "build": "nodemon -L",
+    "debug": "nodemon -L"
+  },
+  "author": "Tony Moonen",
+  "license": "ISC"
+}
