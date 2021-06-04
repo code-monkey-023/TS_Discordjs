@@ -1,5 +1,5 @@
 import {Client, Message, TextChannel} from "discord.js";
-import {config} from "./private/config";
+import {config} from "./private/config.json";
 import { helpers } from "./helpers/helper";
 
 
