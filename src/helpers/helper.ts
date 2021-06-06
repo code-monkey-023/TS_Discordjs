@@ -1,12 +1,11 @@
 
-// let client = new Client();
-
-import { Client, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
+import { client } from "../main";
 
 // Public helper get functions
 export const helpers = {
     get : {
-        channel : function(client : Client,id: string) {
+        channel : function(id: string) {
             return (client.channels.cache.get(id) as TextChannel);
         }
     }
