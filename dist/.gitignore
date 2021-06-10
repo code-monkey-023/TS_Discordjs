@@ -1,4 +1,6 @@
+
 # This .gitignore allows the folder to be 'empty' and added to the repo.
+# This folder will contain all the compiled .js files.
 
 *
 
