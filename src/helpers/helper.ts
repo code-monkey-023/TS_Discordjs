@@ -6,8 +6,14 @@ import { Client, TextChannel } from "discord.js";
 // Public helper get functions
 export const helpers = {
     get : {
-        channel : function(client : Client,id: string) {
-            return (client.channels.cache.get(id) as TextChannel);
+        channel : function(client : Client,channelId: string) {
+            return (client.channels.cache.get(channelId) as TextChannel);
+        },
+        user: function(client)
+    },
+    isRole : {
+        owner : function(userId: string) {
+            return ;
         }
     }
 }
