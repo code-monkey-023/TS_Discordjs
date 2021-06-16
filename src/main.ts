@@ -1,8 +1,8 @@
-import {Client, Message, TextChannel} from "discord.js";
+import {Client, GuildMember, Message, TextChannel} from "discord.js";
 import {config} from "./private/config.json";
 import { helpers } from "./helpers/helper";
 
-export const client: Client = new Client();
+const client: Client = new Client();
 
 export class Bot {
 
@@ -10,13 +10,15 @@ export class Bot {
 
         // Startup event.
         client.once('ready', () => {
-            const botChannel : TextChannel = helpers.get.channel('849600334695628820');
-            botChannel.send('Hello!')
-                .catch( err => console.log(err));
+            const botChannel : TextChannel = helpers.get.channel(client, '849600334695628820');
         });
 
         client.on('message', (message : Message) => {
-            console.log(message.content);
+            
+            if (message.author.bot) return;
+
+            const weenis : GuildMember = helpers.get.member(message, '844481585327505429');
+            message.channel.send(helpers.isRole.owner(message, weenis.id));
         });
 
         return client.login(token);
@@ -24,7 +26,6 @@ export class Bot {
 
     
 }
-
 
 const TonyBot = new Bot();
 TonyBot.start(client, config.token);
