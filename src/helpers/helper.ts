@@ -1,21 +1,35 @@
 
-import { TextChannel, User } from "discord.js";
-import { client } from "../main";
+import { 
+    Client, 
+    TextChannel, 
+    User, 
+    GuildMember, 
+    Message 
+} from "discord.js";
 
-// Public helper get functions
+
 export const helpers = {
+    // Public helper get functions.
     get : {
-        channel : function(channelId: string) {
-            return (client.channels.cache.get(channelId) as TextChannel);
-        },
-        user: function(user: User) {
-            return (client.users.cache.get(user.id) as User);
+        // TODO explore union types more VVVV
+        channel : function(client: Client | Message, channelId: string) {
+            if (client instanceof Client) {
+                return (client.channels.cache.get(channelId) as TextChannel);
+            }
 
+            return (client.guild.channels.cache.get(channelId) as TextChannel);
+        },
+        member: function(msg: Message, userId : string){
+            return (msg.guild.members.cache.get(userId));
+        },
+        user: function(client : Client, userId: string) {
+            return client.users.cache.get(userId);
         }
     },
+    // Public helper role check functions.
     isRole : {
-        owner : function(userId: string) {
-            return ;
+        owner : function(msg: Message, userId: string) {
+            return (msg.guild.ownerID == userId);
         }
     }
 }
