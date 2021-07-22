@@ -1,9 +1,11 @@
-{
-    "ignore": [".git", "node_modules/**/node_modules"],
+
+
+  {
     "verbose": true,
-    "exec": "tsc & node dist/main.js",
+    "watch": ["src"],
     "restart": true,
     "legacyWatch": true,
-    "ext": "ts",
-    "watch": ["src/**/*.ts"]
+    "ext": "ts,json",
+    "ignore": [".git", "node_modules/**/node_modules","src/**/*.spec.ts"],
+    "exec": "ts-node ./src/main.ts"
   }

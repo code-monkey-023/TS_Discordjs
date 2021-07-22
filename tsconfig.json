@@ -1,7 +1,10 @@
 {
-  "compilerOptions": {
+  "ts-node": {
+    "files": true,
+
+    "compilerOptions": {
       "module": "commonjs",
-      "target": "es5",
+      "target": "es6",
 
       "noImplicitAny": true,
       "noUnusedLocals": true,
@@ -13,9 +16,55 @@
       "moduleResolution": "node",
       "esModuleInterop": true,
       "sourceMap": true,
-      "outDir": "dist"
+      "allowJs": true,
+
+
+      "declaration": true,
+      "declarationMap": true,
+      "outDir": "./dist",
+
+      "rootDir": "./src",
+      "baseUrl": "src",
+
+      "typeRoots": [
+        "src/types",
+        "/types",
+      ],
+
+    }
+  },
+  "compilerOptions": {
+      "module": "commonjs",
+      "target": "es6",
+
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+
+      "resolveJsonModule": true,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "allowJs": true,
+
+
+      "declaration": true,
+      "declarationDir": "dist/declarations",
+      "declarationMap": true,
+
+      "rootDir": "./src",
+      "baseUrl": "src",
+      "outDir": "./dist",
+
+      "typeRoots": [
+        "src/types",
+        "/types",
+      ],
   },
   "files": [
       "src/main.ts"
-  ]
+  ],
+  "include": ["src/**/*"]
 }
