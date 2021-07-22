@@ -1,31 +1,82 @@
-import {Client, GuildMember, Message, TextChannel} from "discord.js";
+import {Client, Collection, Message, TextChannel, Command} from "discord.js";
 import {config} from "./private/config.json";
 import { helpers } from "./helpers/helper";
+import * as fs from "fs";
+import * as path from "path";
 
-const client: Client = new Client();
+
+// Custom types.
 
 export class Bot {
 
-    public start(client: Client, token: string): Promise<string> {
+    private client: Client;
+    private command: Command;
 
-        // Startup event.
-        client.once('ready', () => {
-            const botChannel : TextChannel = helpers.get.channel(client, '849600334695628820');
-        });
+    private commandFiles: Array<string>;
+    private args: Array<string>;
+    private prefix: string;
+    private msgContent: string;
+    private commandName: string;
 
-        client.on('message', (message : Message) => {
-            
-            if (message.author.bot) return;
+    constructor() {
 
-            const weenis : GuildMember = helpers.get.member(message, '844481585327505429');
-            message.channel.send(helpers.isRole.owner(message, weenis.id));
-        });
+        this.client = new Client();
+        this.client.commands = new Collection();
+        this.prefix = "!";
 
-        return client.login(token);
+        this.commandFiles = fs.readdirSync( path.resolve(__dirname, './commands/')).filter(file => file.endsWith('.ts'));
+        console.log(this.commandFiles);
+
     }
 
-    
+    public start(token: string): Promise<string> {
+
+        for (const file of this.commandFiles) {
+            const newCommand : Command = require(`./commands/${file}`); // Doesn't work without ts-node.
+            this.client.commands.set(newCommand.name, newCommand);
+        };
+
+        this.client.once('ready', () => {
+            const botChannel : TextChannel = helpers.get.channel(this.client, '849600334695628820');
+            botChannel.send("Test!");
+        });
+        
+        this.client.on('message', (message : Message) => {
+            if (!message.content.startsWith("!") || message.author.bot) return;
+            
+            this.args = [];
+
+            this.msgContent = message.content.slice(this.prefix.length);
+
+            if (!/ +/.test(this.msgContent)) {
+                this.commandName = this.msgContent.toLowerCase();
+            } else {
+                this.commandName = this.msgContent.substr(0, this.msgContent.indexOf(' ')).toLowerCase();
+
+                const argString = this.msgContent.substr(this.msgContent.indexOf(' ')+1);
+
+                this.args = argString.trim().split(',');
+            }
+                
+            this.command = this.client.commands.get(this.commandName)
+                || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(this.commandName));
+
+            if (!this.command) return;
+            try {
+                this.command.execute(message, this.args);
+            } catch(err) {
+                console.log("omg big error occurring just now :(((" );
+
+                console.log('\n');
+
+                console.log('ERROR: ' + err)
+                message.reply('there was an error trying to execute that command!');
+            };
+        });
+
+        return this.client.login(token);
+    } 
 }
 
 const TonyBot = new Bot();
-TonyBot.start(client, config.token);
+TonyBot.start(config.token);
