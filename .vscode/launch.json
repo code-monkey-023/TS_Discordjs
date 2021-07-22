@@ -16,19 +16,19 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
-              {
-                "name": "ts-node",
-                "type": "pwa-node",
-                "request": "launch",
-                "runtimeExecutable": "node",
-                "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
-                "args": ["src/main.ts", "--example", "hello"],
-                "protocol": "inspector",
-                
-                "cwd": "${workspaceRoot}",
-                "internalConsoleOptions": "openOnSessionStart",
-                "skipFiles": ["<node_internals>/**", "node_modules/**"]
-              }
+        {
+        "name": "ts-node",
+        "type": "pwa-node",
+        "request": "launch",
+        "runtimeExecutable": "node",
+        "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+        "args": ["src/main.ts", "--example", "hello"],
+        "protocol": "inspector",
+        
+        "cwd": "${workspaceRoot}",
+        "internalConsoleOptions": "openOnSessionStart",
+        "skipFiles": ["<node_internals>/**", "node_modules/**"]
+        }
             
     ]
 }
