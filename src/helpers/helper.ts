@@ -1,9 +1,7 @@
 
 import { 
     Client, 
-    TextChannel, 
-    User, 
-    GuildMember, 
+    TextChannel,
     Message 
 } from "discord.js";
 
