@@ -4,7 +4,6 @@ import { helpers } from "./helpers/helper";
 import * as fs from "fs";
 import * as path from "path";
 
-
 // Custom types.
 
 export class Bot {
@@ -30,6 +29,14 @@ export class Bot {
     }
 
     public start(token: string): Promise<string> {
+
+        const runtimeData : Object = {
+            data : {
+                startupDate : Math.floor(Date.now() / 1000)
+            }
+        }
+
+        fs.writeFileSync('src/data/runtime.json', JSON.stringify(runtimeData));
 
         for (const file of this.commandFiles) {
             const newCommand : Command = require(`./commands/${file}`); // Doesn't work without ts-node.
