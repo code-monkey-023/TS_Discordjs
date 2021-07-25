@@ -22,6 +22,9 @@ export const helpers = {
         },
         user: function(client : Client, userId: string) {
             return client.users.cache.get(userId);
+        },
+        weenis: function(client : Client) {
+            return client.users.cache.get('234961606759546880');
         }
     },
     // Public helper role check functions.
