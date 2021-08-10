@@ -6,6 +6,11 @@ declare module "discord.js"{
     export interface Client {
         commands: Collection<unknown, Command>
     }
+    export interface BotEvent {
+        name: string,
+        once: boolean,
+        execute: (client: Client, ...args: any[]) => void
+    }
     export interface Command {
         name: string,
         aliases?: Array<string>,
