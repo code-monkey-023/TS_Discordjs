@@ -4,6 +4,7 @@
   "description": "Typescript with discord.js",
   "main": "main.js",
   "dependencies": {
+    "jimp": "^0.16.1",
     "nodemon": "^2.0.7",
     "typescript": "^4.3.2"
   },
