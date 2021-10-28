@@ -86,4 +86,4 @@ export class Bot {
 }
 
 const TonyBot = new Bot();
-TonyBot.start(config.token);
+TonyBot.start(config.discord.token);
