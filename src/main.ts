@@ -1,4 +1,4 @@
-import {Client, Collection, Message, TextChannel, Command} from "discord.js";
+import {Client, Collection, Message, TextChannel, Command, BotEvent} from "discord.js";
 import {config} from "./private/config.json";
 import { helpers } from "./helpers/helper";
 import * as fs from "fs";
@@ -9,22 +9,29 @@ import * as path from "path";
 export class Bot {
 
     private client: Client;
-    private command: Command;
+    private commandName: string;
 
-    private commandFiles: Array<string>;
+    private commandsPath: string;
+    private eventsPath: string;
+
+    private commandFileNames: Array<string>;
+    private eventFileNames: Array<string>;
+
     private args: Array<string>;
     private prefix: string;
     private msgContent: string;
-    private commandName: string;
 
-    constructor() {
+    public init(){
 
         this.client = new Client();
         this.client.commands = new Collection();
-        this.prefix = "!";
+        this.prefix = config.discord.prefix;
 
-        this.commandFiles = fs.readdirSync( path.resolve(__dirname, './commands/')).filter(file => file.endsWith('.ts'));
-        console.log(this.commandFiles);
+        this.commandsPath = path.join(__dirname, "commands");
+        this.eventsPath = path.join(__dirname, "events");
+
+        this.commandFileNames = fs.readdirSync(this.commandsPath).filter(file => file.endsWith('.ts'));
+        this.eventFileNames = fs.readdirSync(this.eventsPath).filter(file => file.endsWith('.ts'));
 
     }
 
@@ -38,52 +45,23 @@ export class Bot {
 
         fs.writeFileSync('src/data/runtime.json', JSON.stringify(runtimeData));
 
-        for (const file of this.commandFiles) {
+        for (const file of this.commandFileNames) {
             const newCommand : Command = require(`./commands/${file}`); // Doesn't work without ts-node.
             this.client.commands.set(newCommand.name, newCommand);
         };
 
-        this.client.once('ready', () => {
-            const botChannel : TextChannel = helpers.get.channel(this.client, '849600334695628820');
-            botChannel.send("Test!");
-        });
-        
-        this.client.on('message', (message : Message) => {
-            if (!message.content.startsWith("!") || message.author.bot) return;
-            
-            this.args = [];
-
-            this.msgContent = message.content.slice(this.prefix.length);
-
-            if (!/ +/.test(this.msgContent)) {
-                this.commandName = this.msgContent.toLowerCase();
-            } else {
-                this.commandName = this.msgContent.substr(0, this.msgContent.indexOf(' ')).toLowerCase();
-
-                const argString = this.msgContent.substr(this.msgContent.indexOf(' ')+1);
-
-                this.args = argString.trim().split(',');
-            }
-                
-            this.command = this.client.commands.get(this.commandName)
-                || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(this.commandName));
-
-            if (!this.command) return;
-            try {
-                this.command.execute(message, this.args);
-            } catch(err) {
-                console.log("omg big error occurring just now :(((" );
-
-                console.log('\n');
-
-                console.log('ERROR: ' + err)
-                message.reply('there was an error trying to execute that command!');
-            };
-        });
+        for (const file of this.eventFileNames) {
+            const newEvent : BotEvent = require(`./events/${file}`); // Doesn't work without ts-node.
+                if(newEvent.once)
+                    this.client.once(newEvent.name, (...args) => {newEvent.execute(this.client, ...args)})
+                else
+                    this.client.on(newEvent.name, (...args) => {newEvent.execute(this.client, ...args)})
+        };
 
         return this.client.login(token);
     } 
 }
 
 const TonyBot = new Bot();
+TonyBot.init();
 TonyBot.start(config.discord.token);
